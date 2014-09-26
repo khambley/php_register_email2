@@ -8,10 +8,9 @@
 
 <body>
 <?php
-$error_code = 0;
 if (isset($_GET['error']) == "1") {
-	$error_code = 1;
-	}
+   $error_code = 1;  //this means that there's been an error and we need to notify the customer
+}
 function checkUserInfo($user_info) {
 	$user_ip = 0;
 	$user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -55,7 +54,11 @@ function checkUserInfo($user_info) {
 		//echo 'Your platform and browser are compatible.<br/>Click the button to download.<br/><br/><a href="download.php"><b>Download our PDF brochure!</b></a>';
 		$user_info = TRUE;
 		return $user_info;
-		} 
+		} else {
+			$user_info = FALSE;
+			return $user_info;
+		}
+	
 }
 ?>
 <div class="topbar">
@@ -69,37 +72,36 @@ links go here
 </td><td class="content">
 <h3>Welcome to Acme Plug-In Company!</h3><br/>
 <?php
-if ($error_code) {
+if (isset($error_code)) {
 	echo "<div style='color:red'>Please complete the following:</div>";
 }
 ?>
 
 <?php
-	$user_info = TRUE;
-  checkUserInfo($user_info);
-	if ($user_info) {
+	$user_info = FALSE;
+  $user_info_return = checkUserInfo($user_info);
+	
+	if ($user_info_return == TRUE) {
 		echo 'Your platform and browser are compatible.<br />';
 		echo 'Please register your name and email to download the plug-in:<br />';
-?>
+?> 
 <form method="GET" action="register.php">
 <table>
 	<tr>
   	<td align="right">Name: </td>
     <td algin="left"><input type="text" size="25" name="name" value="<?php if (isset($_GET['name'])) { echo $_GET['name']; } ?>" />
-    <?php if ($error_code && !($_GET['name'])) { echo "<b>Please include your name.</b>"; } ?>
+    <?php if (isset($error_code) && !($_GET['name'])) { echo "<b>Please include your name.</b>"; } ?>
     </td>
   </tr>
   <tr>
   	<td align="right">Email: </td>
     <td align="left"><input type="text" size="25" name="email" value="<?php if (isset($_GET['email'])) { echo $_GET['email']; } ?>" />
-    <?php if ($error_code && !($_GET['email'])) { echo "<b>Please include your email address.</b>"; } ?>
+    <?php if (isset($error_code) && !($_GET['email'])) { echo "<b>Please enter a valid email address.</b>"; } ?>
     <?php
-		if (isset($_GET['email'])) {
-			$email = $_GET['email'];
-		}
-		if ($error_code && !(filter_var($email, FILTER_VALIDATE_EMAIL))) {
+		
+		/*if (isset($error_code) && !(filter_var(isset($_GET['email']), FILTER_VALIDATE_EMAIL))) {
 			echo "<b>Please enter a valid email address.</b>";
-		}
+		}*/
 		?>
     </td>
   </tr>
@@ -109,7 +111,8 @@ if ($error_code) {
 </table>
 </form>
 <?php
-	} //end $user_info if statement
+	} 
+	//end $user_info if statement
 ?>
 </td></tr></table>
 <div class="bottombar">

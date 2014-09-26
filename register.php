@@ -1,3 +1,19 @@
+<?php
+$customer_name = $_GET['name'];
+$customer_email = $_GET['email'];
+
+#Remember, if you place any output before a header() call, you'll get an error.
+if (!($customer_name && $customer_email)) {
+	
+   $query_string = $_SERVER['QUERY_STRING'];
+   #add a flag called "error" to tell register_form.php that something needs fixed
+   $url = "http://".$_SERVER['HTTP_HOST']."/php_register_email2/register-form.php?".$query_string."&error=1";
+   header("Location: ".$url);
+   exit();  //stop the rest of the program from happening
+   
+}
+
+?>
 <!doctype html>
 <html>
 <head>
@@ -7,22 +23,7 @@
 </head>
 
 <body>
-<?php
-$customer_name = $_GET['name'];
-$customer_email = $_GET['email'];
 
-#Remember, if you place any output before a header() call, you'll get an error.
-if (!($customer_name && $customer_email))) {
-	
-   $query_string = $_SERVER['QUERY_STRING'];
-   #add a flag called "error" to tell register_form.php that something needs fixed
-   $url = "http://".$_SERVER['HTTP_HOST']."/php_register_email/register_form.php?".$query_string."&error=1";
-   header("Location: ".$url);
-   exit();  //stop the rest of the program from happening
-   
-}
-
-?>
 <div class="topbar">
 ACME, INC.
 </div>
