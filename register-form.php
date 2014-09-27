@@ -75,10 +75,11 @@ links go here
 if (isset($error_code)) {
 	echo "<div style='color:red'>Please complete the following:</div>";
 }
+
 ?>
 
 <?php
-	$user_info = FALSE;
+  $user_info = FALSE;
   $user_info_return = checkUserInfo($user_info);
 	
 	if ($user_info_return == TRUE) {
@@ -90,13 +91,16 @@ if (isset($error_code)) {
 	<tr>
   	<td align="right">Name: </td>
     <td algin="left"><input type="text" size="25" name="name" value="<?php if (isset($_GET['name'])) { echo $_GET['name']; } ?>" />
-    <?php if (isset($error_code) && !($_GET['name'])) { echo "<b>Please include your name.</b>"; } ?>
+    <?php if (isset($error_code) && !($_GET['name'] || $_COOKIE['name'])) { echo "<b>Please include your name.</b>"; } ?>
     </td>
   </tr>
   <tr>
   	<td align="right">Email: </td>
     <td align="left"><input type="text" size="25" name="email" value="<?php if (isset($_GET['email'])) { echo $_GET['email']; } ?>" />
-    <?php if (isset($error_code) && !($_GET['email'])) { echo "<b>Please enter a valid email address.</b>"; } ?>
+    <?php
+	if (isset($error_code) && !(filter_var($_GET['email'], FILTER_VALIDATE_EMAIL))) {
+			echo "Invalid email address";
+	} ?>
     <?php
 		
 		/*if (isset($error_code) && !(filter_var(isset($_GET['email']), FILTER_VALIDATE_EMAIL))) {
@@ -111,8 +115,7 @@ if (isset($error_code)) {
 </table>
 </form>
 <?php
-	} 
-	//end $user_info if statement
+	} //end $user_info if statement
 ?>
 </td></tr></table>
 <div class="bottombar">
